@@ -169,7 +169,6 @@ const Level = ({ levelData, playerPosition }) => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ 
             opacity: 1, 
-            x: 0,
             x: [0, 20, 0]
           }}
           transition={{ 

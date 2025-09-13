@@ -86,7 +86,8 @@ const gameReducer = (state, action) => {
         ...state,
         showQuestionModal: false,
         currentQuestion: null,
-        questionStation: null
+        questionStation: null,
+        gameState: 'playing'
       };
     
     case 'SET_GAME_STATE':
@@ -113,10 +114,25 @@ const gameReducer = (state, action) => {
         particles: [...state.particles, action.particle]
       };
     
+    case 'COMPLETE_STATION':
+      return {
+        ...state,
+        completedStations: [...(state.completedStations || []), action.stationId]
+      };
+    
     case 'REMOVE_PARTICLE':
       return {
         ...state,
         particles: state.particles.filter(p => p.id !== action.id)
+      };
+    
+    case 'SET_CAMERA':
+      return {
+        ...state,
+        camera: {
+          x: action.x,
+          y: action.y
+        }
       };
     
     case 'RESET_GAME':
@@ -158,6 +174,7 @@ const initialState = {
   currentQuestion: null,
   questionStation: null,
   particles: [],
+  completedStations: [],
   camera: {
     x: 0,
     y: 0
@@ -206,6 +223,7 @@ export const GameProvider = ({ children }) => {
     addScore: (amount) => dispatch({ type: 'ADD_SCORE', amount }),
     addParticle: (particle) => dispatch({ type: 'ADD_PARTICLE', particle }),
     removeParticle: (id) => dispatch({ type: 'REMOVE_PARTICLE', id }),
+    completeStation: (stationId) => dispatch({ type: 'COMPLETE_STATION', stationId }),
     resetGame: () => dispatch({ type: 'RESET_GAME' }),
 
     // Complex actions

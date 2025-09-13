@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../context/GameContext';
@@ -90,7 +90,9 @@ const Description = styled.div`
   font-family: 'Segoe UI', 'Roboto', sans-serif;
 `;
 
-const CodeEditor = styled.textarea`
+const CodeEditor = styled.textarea.withConfig({
+  shouldForwardProp: (prop) => prop !== 'ref',
+})`
   width: 100%;
   height: 350px;
   background: #1e1e1e;
@@ -237,10 +239,11 @@ const Hint = styled.div`
 `;
 
 const QuestionModal = () => {
-  const { state, hideQuestionModal, addXp, addScore, addParticle } = useGame();
+  const { state, hideQuestionModal, addXp, addScore, addParticle, completeStation } = useGame();
   const [code, setCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState(null);
+  const textareaRef = useRef(null);
 
   const { showQuestionModal, currentQuestion } = state;
 
@@ -248,6 +251,12 @@ const QuestionModal = () => {
     if (currentQuestion && showQuestionModal) {
       setCode(currentQuestion.starterCode || '');
       setResult(null);
+      // Auto-focus the textarea when modal opens
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      }, 100);
     }
   }, [currentQuestion, showQuestionModal]);
 
@@ -279,6 +288,11 @@ const QuestionModal = () => {
           text: `+${xpReward} XP`,
           duration: 2000
         });
+
+        // Mark station as completed
+        if (state.questionStation && state.questionStation.id) {
+          completeStation(state.questionStation.id);
+        }
 
         // Close modal after a delay
         setTimeout(() => {
@@ -354,7 +368,12 @@ const QuestionModal = () => {
             ))}
           </TestCases>
 
+          <div style={{ marginBottom: '1rem', color: '#00d4ff', fontSize: '0.9rem', fontStyle: 'italic' }}>
+            💡 Tip: Use Tab for indentation, Space for spaces. Game controls are disabled while typing.
+          </div>
+
           <CodeEditor
+            ref={textareaRef}
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="# Write your Python solution here...&#10;# Example:&#10;def two_sum(nums, target):&#10;    # Your code here&#10;    pass"
