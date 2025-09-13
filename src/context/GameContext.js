@@ -90,6 +90,23 @@ const gameReducer = (state, action) => {
         gameState: 'playing'
       };
     
+    case 'RESET_GAME':
+      return {
+        ...state,
+        player: {
+          ...state.player,
+          x: 100,
+          y: 470, // Ground level (600 - 100 - 30)
+          vx: 0,
+          vy: 0,
+          state: 'idle'
+        },
+        showQuestionModal: false,
+        currentQuestion: null,
+        questionStation: null,
+        gameState: 'playing'
+      };
+    
     case 'SET_GAME_STATE':
       return {
         ...state,
@@ -135,15 +152,6 @@ const gameReducer = (state, action) => {
         }
       };
     
-    case 'RESET_GAME':
-      return {
-        ...initialState,
-        player: {
-          ...initialState.player,
-          level: state.player.level,
-          unlockedLevels: state.unlockedLevels
-        }
-      };
     
     default:
       return state;
@@ -154,7 +162,7 @@ const gameReducer = (state, action) => {
 const initialState = {
   player: {
     x: 100,
-    y: 400,
+    y: 470, // Ground level (600 - 100 - 30)
     vx: 0,
     vy: 0,
     width: 32,
@@ -219,12 +227,12 @@ export const GameProvider = ({ children }) => {
     setQuestion: (question) => dispatch({ type: 'SET_QUESTION', question }),
     showQuestionModal: (station) => dispatch({ type: 'SHOW_QUESTION_MODAL', station }),
     hideQuestionModal: () => dispatch({ type: 'HIDE_QUESTION_MODAL' }),
+    resetGame: () => dispatch({ type: 'RESET_GAME' }),
     setGameState: (state) => dispatch({ type: 'SET_GAME_STATE', state }),
     addScore: (amount) => dispatch({ type: 'ADD_SCORE', amount }),
     addParticle: (particle) => dispatch({ type: 'ADD_PARTICLE', particle }),
     removeParticle: (id) => dispatch({ type: 'REMOVE_PARTICLE', id }),
     completeStation: (stationId) => dispatch({ type: 'COMPLETE_STATION', stationId }),
-    resetGame: () => dispatch({ type: 'RESET_GAME' }),
 
     // Complex actions
     triggerQuestion: async (station) => {

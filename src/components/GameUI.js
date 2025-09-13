@@ -189,8 +189,8 @@ const GameUI = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
       >
-        <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>CONTROLS:</div>
-        <div>← → Move | ↑ Jump | Touch to move on mobile</div>
+        <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>GEOMETRY DASH CONTROLS:</div>
+        <div>SPACE or ↑ to JUMP | Answer coding questions when you die!</div>
       </ControlsHint>
 
       <AnimatePresence>

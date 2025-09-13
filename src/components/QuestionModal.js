@@ -239,7 +239,7 @@ const Hint = styled.div`
 `;
 
 const QuestionModal = () => {
-  const { state, hideQuestionModal, addXp, addScore, addParticle, completeStation } = useGame();
+  const { state, hideQuestionModal, addXp, addScore, addParticle, completeStation, resetGame } = useGame();
   const [code, setCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState(null);
@@ -294,9 +294,10 @@ const QuestionModal = () => {
           completeStation(state.questionStation.id);
         }
 
-        // Close modal after a delay
+        // Close modal and reset game after a delay
         setTimeout(() => {
           hideQuestionModal();
+          resetGame(); // Reset the game to start position
         }, 2000);
       } else {
         setResult({ 
